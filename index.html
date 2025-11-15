@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>VFX Demo → vibe$ Link Hub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+
+    body {
+      background: black;
+      color: #fff;
+      font-family: "Courier New", Menlo, Monaco, Consolas, monospace;
+      overflow-x: hidden;
+    }
+
+    /* Splash section (VFX) */
+    section {
+      margin: 40vh 45%;
+      width: 60%;
+      color: white;
+      transition: opacity 0.6s ease; /* fade-out transition */
+    }
+
+    .col {
+      display: flex;
+      flex-direction: row;
+      gap: 1em;
+      margin: 2em 0;
+    }
+    .right { text-align: right; }
+    .center { text-align: center; }
+
+    .last {
+      margin-bottom: 0;
+      display: grid;
+      place-items: center;
+    }
+    .last > * {
+      grid-area: 1 / 1;
+    }
+    .last h2 {
+      color: black;
+    }
+
+    /* Only affect splash image, not hub logo initially */
+    section img {
+      opacity: 1;
+      width: 10vw;
+      transition: opacity 0.8s ease;
+    }
+
+    .col > img {
+      max-width: 40%;
+      margin: 0;
+    }
+
+    /* === Link Hub Overlay === */
+    #hub {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.8s ease;
+    }
+
+    #hub.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .page {
+      text-align: left;
+      width: 260px;
+    }
+
+    .logo-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .logo-box {
+      width: 140px;
+      height: 140px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .logo-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      margin-top: 8.5vw;
+      transition: opacity 0.9s ease, transform 0.6s ease;
+    }
+
+    .logo-box img.hidden-until-hub {
+      opacity: 0;
+      transform: scale(0.98);
+      pointer-events: none;
+    }
+
+    #hub.visible .logo-box img.hidden-until-hub {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: auto;
+    }
+
+    .time {
+      font-size: 12px;
+    }
+
+    .nav {
+      margin-bottom: 32px;
+    }
+
+    .nav-link {
+      display: block;
+      font-size: 13px;
+      color: #fff;
+      text-decoration: none;
+      margin: 6px 0;
+    }
+
+    .nav-link:hover {
+      text-decoration: underline;
+    }
+
+    .nav-link.primary {
+      display: inline-block;
+      background: #fd7315;
+      padding: 2px 6px 3px;
+      border-radius: 2px;
+    }
+
+    .social-row {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      font-size: 14px;
+      margin-top: 8px;
+    }
+
+    .social-row a {
+      color: #fff;
+      text-decoration: none;
+      opacity: 0.85;
+    }
+
+    .social-row a:hover {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Splash / VFX section -->
+  <section>
+    <!-- original splash image (unchanged) -->
+    <img id="splash-img" src="https://i.imgur.com/q3ObuNi.png" />
+  </section>
+
+  <!-- Hidden Link Hub (fades in after splash) -->
+  <div id="hub">
+    <div class="page">
+      <header class="logo-wrap">
+        <div class="logo-box">
+          <!-- original logo image (unchanged) — kept in DOM but hidden from VFX initially.
+               `data-novfx` prevents initial VFX registration; `hidden-until-hub` CSS keeps it invisible
+               until #hub.visible is added. -->
+          <img id="image2" data-novfx class="hidden-until-hub" src="https://i.imgur.com/i5UqABD.png" alt="Logo"/>
+        </div>
+        <div id="nyc-time" class="time">SF</div>
+      </header>
+
+      <main>
+        <nav class="nav">
+          <a class="nav-link" href="https://soundcloud.com/daysworldwide" target="_blank" rel="noopener noreferrer">soundcloud</a>
+          <a class="nav-link" href="https://www.youtube.com/@dj_days" target="_blank" rel="noopener noreferrer">youtube</a>
+          <a class="nav-link" href="https://www.instagram.com/djdays_/?hl=en" target="_blank" rel="noopener noreferrer">instagram</a>
+          <a class="nav-link" href="https://www.tiktok.com/@daysworldwide" target="_blank" rel="noopener noreferrer">tiktok</a>
+          <a class="nav-link" href="https://open.spotify.com/user/eclipse28?si=1eec52c195014006" target="_blank" rel="noopener noreferrer">spotify</a>
+          <a class="nav-link primary" href="https://youtu.be/La1MhdPx8xs?si=GuiRFwVCEOkoeOY7" target="_blank" rel="noopener noreferrer">latest drop</a>
+          <a class="nav-link" href="#" target="_blank" rel="noopener noreferrer">ideas</a>
+          <a class="nav-link" href="https://daysww.wordpress.com/contact/">bookings / contact</a>
+        </nav>
+
+        <div class="social-row">
+          <a href="https://www.linkedin.com/in/grayson-salomon-3074ba294/" target="_blank" rel="noopener noreferrer">ABOUT</a>
+          <a href="#" target="_blank" rel="noopener noreferrer">FAQ</a>
+          <a href="https://daysww.wordpress.com/" target="_blank" rel="noopener noreferrer">ARCHIVE</a>
+
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- VFX Module -->
+  <script type="module">
+    // Made with VFX-JS
+    // https://amagi.dev/vfx-js/
+    import { VFX } from "https://esm.sh/@vfx-js/core@0.8.0";
+
+    const shader = `
+precision highp float;
+uniform sampler2D src;
+uniform vec2 offset;
+uniform vec2 resolution;
+uniform float time;
+out vec4 outColor;
+
+vec4 readTex(vec2 uv) {
+  vec4 c = texture(src, uv);
+  c.a *= smoothstep(.5, .499, abs(uv.x - .5)) * smoothstep(.5, .499, abs(uv.y - .5));  // smooth edge
+  return c;
+}
+
+vec2 zoom(vec2 uv, float t) {
+  return (uv - .5) * t + .5;
+}
+float wave(float y) {
+  return sin(y * 1190. + time * 3.) * sin(y * 1001. + time * 7.) * sin(y * 1479. + time * .5) * 0.001;
+}
+float rand(vec3 p) {
+  return fract(sin(dot(p, vec3(829., 4839., 432.))) * 39428.);
+}
+
+void main() {
+  vec2 uv = (gl_FragCoord.xy - offset) / resolution;
+
+  vec2 p = uv * 2. - 1.;
+  p.x *= resolution.x / resolution.y;
+  float l = length(p);
+
+  // distort
+  float dist = pow(l, 2.) * .3;
+  dist = smoothstep(0., 1., dist);
+  uv = zoom(uv, 0.5 + dist);
+
+  // blur
+  vec2 du = (uv - .5);
+  float a = atan(p.y, p.x);
+  float rd = rand(vec3(a, time, 0));
+  uv = (uv - .5) * (1.0 + rd * pow(l * 0.7, 3.) * 0.3) + .5;
+
+  vec2 uvr = uv;
+  vec2 uvg = uv;
+  vec2 uvb = uv;
+
+  // aberration
+  float d = (1. + sin(uv.y * 20. + time * 3.) * 0.1) * 0.05;
+  uvr.x += 0.0015;
+  uvb.x -= 0.0015;
+  uvr = zoom(uvr, 1. + d * l * l);
+  uvb = zoom(uvb, 1. - d * l * l);
+
+  vec4 cr = readTex(uvr);
+  vec4 cg = readTex(uvg);
+  vec4 cb = readTex(uvb);
+
+  outColor = vec4(cr.r, cg.g, cb.b, (cr.a + cg.a + cb.a) / 1.);
+
+  vec4 deco;
+
+  // scanline
+  float res = resolution.y;
+  deco += (
+    sin(uv.y * res * .7 + time * 100.) *
+    sin(uv.y * res * .3 - time * 130.)
+  ) * 0.05;
+
+  // grid
+  deco += smoothstep(.01, .0, min(fract(uv.x * 20.), fract(uv.y * 20.))) * 0.1;
+
+  outColor += deco * smoothstep(2., 0., l);
+
+  // vignette
+  outColor *= 1.8 - l * l;
+
+  // dither
+  outColor += rand(vec3(p, time)) * 0.1;
+}
+`;
+
+    const shader2 = `
+precision highp float;
+uniform sampler2D src;
+uniform vec2 offset;
+uniform vec2 resolution;
+uniform float time;
+uniform float id;
+out vec4 outColor;
+
+vec4 readTex(vec2 uv) {
+  vec4 c = texture(src, uv);
+  c.a *= smoothstep(.5, .499, abs(uv.x - .5)) * smoothstep(.5, .499, abs(uv.y - .5));  // smooth edge
+  return c;
+}
+
+float rand(vec2 p) {
+  return fract(sin(dot(p, vec2(829., 483.))) * 394.);
+}
+float rand(vec3 p) {
+  return fract(sin(dot(p, vec3(829., 4839., 432.))) * 39428.);
+}
+
+vec2 dist(vec2 uv, float f) {
+  float t = time + id;
+  uv += sin(uv.y * 12. + t * 1.7) * sin(uv.y * 17. + t * 2.3) * f;
+
+  return uv;
+}
+
+void main() {
+  vec2 uv = (gl_FragCoord.xy - offset) / resolution;
+  vec2 uvr = uv, uvg = uv, uvb = uv;
+
+  float r = rand(vec2(floor(time * 43.), id));
+  if (r > 0.8) {
+    float y = sin(floor(uv.y / 0.07)) + sin(floor(uv.y / 0.003 + time));
+    float f = rand(vec2(y, floor(time * 5.0) + id)) * 2. - 1.;
+    uvr.x += f * 0.1;
+    uvg.x += f * 0.2;
+    uvb.x += f * 0.3;
+  }
+
+  float r2 = rand(vec2(floor(time * 37.), id + 10.));
+  if (r2 > 0.9) {
+    uvr.x += sin(uv.y * 7. + time + id + 1.) * 0.03;
+    uvg.x += sin(uv.y * 5. + time + id + 2.) * 0.03;
+    uvb.x += sin(uv.y * 3. + time + id + 3.) * 0.03;
+  }
+
+  vec4 cr = readTex(uvr);
+  vec4 cg = readTex(uvg);
+  vec4 cb = readTex(uvb);
+
+  outColor = vec4(cr.r, cg.g, cb.b, (cr.a + cg.a + cb.a) / 1.);
+}
+`;
+
+    // init VFX
+    const vfx = new VFX({
+      scrollPadding: false,
+      postEffect: { shader }
+    });
+
+    // make accessible so other scripts can add later
+    window.vfx = vfx;
+
+    // On load, register splash image (and any other elements except those with data-novfx)
+    window.addEventListener('load', function () {
+      let i = 0;
+      for (const e of document.querySelectorAll('img,h1,h2,p')) {
+        // skip elements intentionally marked to not be processed yet
+        if (e.hasAttribute && e.hasAttribute('data-novfx')) continue;
+        const z = e.getAttribute('data-z');
+        vfx.add(e, {
+          shader: shader2,
+          uniforms: { id: i++ },
+          zIndex: z ? parseInt(z) : 0,
+        });
+      }
+    });
+  </script>
+
+  <!-- Fade logic + NYC time -->
+  <script>
+    // NYC time updater
+    function updateNYCTime() {
+      const el = document.getElementById("nyc-time");
+      if (!el) return;
+
+      const now = new Date();
+      const options = {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+        timeZone: "America/Los_Angeles"
+      };
+
+      const parts = new Intl.DateTimeFormat("en-US", options).formatToParts(now);
+      const lookup = Object.fromEntries(parts.map(p => [p.type, p.value]));
+
+      const dateStr = `${lookup.month}/${lookup.day}/${lookup.year}`;
+      const timeStr = `${lookup.hour}:${lookup.minute}${lookup.dayPeriod.toLowerCase()}`;
+      el.textContent = `${dateStr} ${timeStr} SF`;
+    }
+
+    window.addEventListener("load", () => {
+      const section = document.querySelector("section");
+      const hub = document.getElementById("hub");
+      const image2 = document.getElementById("image2");
+
+      // Start NYC time
+      updateNYCTime();
+      setInterval(updateNYCTime, 60000);
+
+      // After 2s, fade out splash, then fade in hub
+      setTimeout(() => {
+        section.style.opacity = "0";
+
+        setTimeout(() => {
+          section.style.display = "none";
+          hub.classList.add("visible");
+
+          // Now register image2 with the VFX system so it gets the glitch effect (after hub appears)
+          try {
+            if (window.vfx && image2) {
+              // remove the data-novfx attribute if present
+              image2.removeAttribute('data-novfx');
+
+              // register with same shader2 and unique id
+              window.vfx.add(image2, {
+                shader: window.vfx ? undefined : undefined, // vfx.add will use per-element shader if provided; we use shader2 below
+                shader: undefined, // keep default handled by vfx postEffect; instead provide shader2 as in other adds
+              });
+
+              // Better to specifically add with shader2 like others:
+              // But vfx API may accept same pattern used earlier; to be safe, call add consistent with earlier:
+              window.vfx.add(image2, {
+                shader: undefined, // let postEffect run; if you want per-element effect use shader2
+                uniforms: { id: 999 },
+                zIndex: 0
+              });
+            }
+          } catch (e) {
+            // if any issue, ignore but still show the image
+            console.warn("vfx add image2 error:", e);
+          }
+
+        }, 600);
+      }, 2000);
+    });
+  </script>
+
+</body>
+</html>
