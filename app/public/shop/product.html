@@ -120,18 +120,49 @@
   .swatches a img { width: 100%; height: 100%; object-fit: cover; }
   .swatches a.active { outline: 2px solid #111; outline-offset: 2px; }
 
+  .buy-form { display: flex; flex-direction: column; gap: 16px; }
+
+  .size-select { display: flex; flex-direction: column; gap: 8px; }
+  .size-select label { font-size: 12px; color: #666; }
+  .select-wrap { position: relative; }
+  .select-wrap::after {
+    content: "\2304";
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 14px;
+  }
+  .size-select select {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #111;
+    background: #fff;
+    color: #111;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    border-radius: 0;
+  }
+
   .add-to-cart {
     width: 100%;
     padding: 16px;
-    background: #eee;
-    color: #999;
+    background: #111;
+    color: #fff;
     border: none;
     font-family: inherit;
     font-weight: 700;
     font-size: 14px;
     text-transform: uppercase;
-    cursor: not-allowed;
+    cursor: pointer;
   }
+  .add-to-cart:hover { background: #333; }
 
   footer {
     text-align: center;
@@ -154,7 +185,6 @@
   <nav>
     <a href="index.html">Web Shop</a>
     <a href="https://open.spotify.com/track/4e5f4kvBdFKzr3zeGFjzk2?si=3a070caa5b8c4365" target="_blank" rel="noopener noreferrer">Advice</a>
-    <a href="#">Cart</a>
   </nav>
 </header>
 
@@ -166,6 +196,7 @@
   <div class="product-panel">
     <div>
       <h1>Different Day$ Tee - Black</h1>
+      <p class="price">$50.00</p>
     </div>
 
     <div class="description">
@@ -197,7 +228,27 @@
       </a>
     </div>
 
-    <button class="add-to-cart" disabled>Coming Soon</button>
+    <form class="buy-form" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+      <input type="hidden" name="cmd" value="_s-xclick" />
+      <input type="hidden" name="hosted_button_id" value="T4NCYHHXW3SZS" />
+      <input type="hidden" name="currency_code" value="USD" />
+      <input type="hidden" name="on0" value="SIZE" />
+
+      <div class="size-select">
+        <label for="size">Size</label>
+        <div class="select-wrap">
+          <select id="size" name="os0" required>
+            <option value="" disabled selected>Select Size</option>
+            <option value="SMALL">Small</option>
+            <option value="MEDIUM">Medium</option>
+            <option value="LARGE">Large</option>
+            <option value="XLARGE">X-Large</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="submit" class="add-to-cart">Buy Now</button>
+    </form>
   </div>
 </main>
 
