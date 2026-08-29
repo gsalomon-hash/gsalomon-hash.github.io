@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>DIFFERENT DAY$ TEE - BLACK | DAY$ SHOP</title>
+<title>WEB SHOP | DAY$ SHOP</title>
 <style>
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
@@ -41,97 +41,42 @@
     padding: 0 10px;
   }
   header nav a:hover { color: #999; }
+  header nav a.active { text-decoration: underline; }
 
-  .back-btn {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    z-index: 100;
-    background: #fff;
-    border: none;
-    border-radius: 999px;
-    width: 44px;
-    height: 44px;
+  .categories {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 110px 24px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    font-size: 13px;
+  }
+  .categories a { color: #999; }
+  .categories a.active { color: #111; text-decoration: underline; }
+
+  .grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px 60px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 2px;
+  }
+
+  .tile { display: block; }
+  .tile .thumb {
+    background: #f4f4f4;
+    aspect-ratio: 1 / 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
-  }
-  .back-btn:hover { background: #f2f2f2; }
-
-  main {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 110px 24px 60px;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
-  @media (min-width: 900px) {
-    main {
-      grid-template-columns: 7fr 4fr;
-      align-items: start;
-    }
-  }
-
-  .gallery {
-    background: #f4f4f4;
-  }
-  .gallery img { width: 100%; display: block; aspect-ratio: 9 / 10; object-fit: cover; }
-
-  .product-panel {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    padding-top: 4px;
-  }
-  @media (min-width: 900px) { .product-panel { position: sticky; top: 100px; } }
-
-  h1 { font-size: 15px; margin: 0; }
-  .price { font-size: 15px; margin: 8px 0 0; }
-
-  .description ul { margin: 0; padding-left: 18px; font-size: 14px; line-height: 1.6; }
-
-  .disclosures { display: flex; flex-direction: column; gap: 6px; }
-  .disclosures summary {
-    cursor: pointer;
-    font-size: 14px;
-    color: #666;
-    list-style: none;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .disclosures summary::-webkit-details-marker { display: none; }
-  .disclosures summary:hover { color: #111; }
-  .disclosures summary::after { content: "\2304"; }
-  .disclosures[open] summary::after { content: "\2303"; }
-  .disclosures p { font-size: 13px; color: #444; margin: 8px 0 0; text-transform: none; font-weight: 400; }
-
-  .swatches { display: flex; flex-wrap: wrap; gap: 10px; }
-  .swatches a {
-    width: 52px;
-    height: 52px;
-    background: #f4f4f4;
     overflow: hidden;
-    position: relative;
   }
-  .swatches a img { width: 100%; height: 100%; object-fit: cover; }
-  .swatches a.active { outline: 2px solid #111; outline-offset: 2px; }
-
-  .add-to-cart {
-    width: 100%;
-    padding: 16px;
-    background: #eee;
-    color: #999;
-    border: none;
-    font-family: inherit;
-    font-weight: 700;
-    font-size: 14px;
-    text-transform: uppercase;
-    cursor: not-allowed;
-  }
+  .tile .thumb img { width: 100%; height: 100%; object-fit: contain; }
+  .tile .thumb:hover img { opacity: 0.85; }
+  .tile .name { font-size: 12px; margin-top: 10px; }
+  .tile .price { font-size: 12px; color: #999; margin-top: 2px; text-transform: none; }
 
   footer {
     text-align: center;
@@ -145,79 +90,36 @@
 </head>
 <body>
 
-<button class="back-btn" onclick="history.back()" aria-label="Back">&#8592;</button>
-
 <header>
   <a class="logo" href="https://daysworldwide.me" target="_blank" rel="noopener noreferrer">
     <img src="day-logo.png" alt="DAY$ Worldwide" />
   </a>
   <nav>
-    <a href="#">Web Shop</a>
+    <a class="active" href="index.html">Web Shop</a>
     <a href="#">Shops</a>
     <a href="#">Advice</a>
     <a href="#">Cart</a>
   </nav>
 </header>
 
-<main>
-  <div class="gallery">
-    <img id="main-image" src="day-back.png" alt="Different Day$ Tee - Black, back print" />
-  </div>
+<div class="categories">
+  <a class="active" href="index.html">All</a>
+  <a href="index.html">Tees</a>
+</div>
 
-  <div class="product-panel">
-    <div>
-      <h1>Different Day$ Tee - Black</h1>
+<div class="grid">
+  <a class="tile" href="product.html">
+    <div class="thumb">
+      <img src="day-back.png" alt="Different Day$ Tee - Black" />
     </div>
-
-    <div class="description">
-      <ul>
-        <li>Heavy Ass 7.7 Ounce Tee</li>
-        <li>Made and Screen Printed in Los Angeles, CA</li>
-        <li>Passport Not Included</li>
-        <li>For Fly Foo's Only</li>
-      </ul>
-    </div>
-
-    <div class="disclosures">
-      <details>
-        <summary>Technical Details</summary>
-        <p>100% cotton. 100% yo bitch stealing this shirt from yo closet</p>
-      </details>
-      <details>
-        <summary>Size Chart</summary>
-        <p>Slightly oversized fit, just how yo bitch like it</p>
-      </details>
-    </div>
-
-    <div class="swatches" aria-label="Views">
-      <a class="view-btn" title="Front" href="#" data-image="day-front.png">
-        <img src="day-front.png" alt="Front" />
-      </a>
-      <a class="view-btn active" title="Back" href="#" data-image="day-back.png">
-        <img src="day-back.png" alt="Back" />
-      </a>
-    </div>
-
-    <button class="add-to-cart" disabled>Coming Soon</button>
-  </div>
-</main>
+    <div class="name">Different Day$ Tee - Black</div>
+    <div class="price">Coming Soon</div>
+  </a>
+</div>
 
 <footer>
   DAY$ Worldwide. Mockup for reference purposes only.
 </footer>
-
-<script>
-  const mainImage = document.getElementById("main-image");
-  document.querySelectorAll(".view-btn").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.preventDefault();
-      document.querySelectorAll(".view-btn").forEach((b) => b.classList.remove("active"));
-      btn.classList.add("active");
-      mainImage.src = btn.dataset.image;
-      mainImage.alt = btn.title;
-    });
-  });
-</script>
 
 </body>
 </html>
