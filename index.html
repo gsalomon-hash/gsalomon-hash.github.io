@@ -65,9 +65,11 @@
     /* Bigger splash logo on phone-sized screens */
     @media (max-width: 600px) {
       section {
-        margin: 36vh auto;
+        margin: 0 auto;
+        margin-top: max(34vh, 240px);
         width: 100%;
         text-align: center;
+        padding-top: env(safe-area-inset-top);
       }
 
       section img {
