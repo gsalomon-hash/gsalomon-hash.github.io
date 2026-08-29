@@ -78,7 +78,7 @@
   .gallery {
     background: #f4f4f4;
   }
-  .gallery img { width: 100%; display: block; aspect-ratio: 9 / 10; object-fit: cover; }
+  .gallery img { width: 100%; display: block; }
 
   .product-panel {
     display: flex;
@@ -190,7 +190,7 @@
 
 <main>
   <div class="gallery">
-    <img id="main-image" src="day-back.png" alt="Different Day$ Tee - Black, back print" />
+    <img id="main-image" src="day-front.png" alt="Different Day$ Tee - Black, front print" />
   </div>
 
   <div class="product-panel">
@@ -220,10 +220,10 @@
     </div>
 
     <div class="swatches" aria-label="Views">
-      <a class="view-btn" title="Front" href="#" data-image="day-front.png">
+      <a class="view-btn active" title="Front" href="#" data-image="day-front.png">
         <img src="day-front.png" alt="Front" />
       </a>
-      <a class="view-btn active" title="Back" href="#" data-image="day-back.png">
+      <a class="view-btn" title="Back" href="#" data-image="day-back.png">
         <img src="day-back.png" alt="Back" />
       </a>
     </div>
