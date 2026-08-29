@@ -62,47 +62,6 @@
       margin: 0;
     }
 
-    /* Bigger splash logo on phone-sized screens */
-    @media (max-width: 600px) {
-      section {
-        margin: 0 auto;
-        margin-top: max(30vh, 300px);
-        width: 100%;
-        text-align: center;
-        padding-top: env(safe-area-inset-top);
-      }
-
-      section img {
-        width: 45vw;
-      }
-
-      /* Hub logo: bigger, and sitting right on top of the date/time line.
-         The source PNG carries ~15% transparent padding above its artwork and
-         ~20% below, so the box is deliberately oversized and the surrounding
-         margins are pulled negative to close the *visible* gap. */
-      .logo-box {
-        width: 190px;
-        height: 190px;
-      }
-
-      .logo-box img {
-        margin-top: 0;
-      }
-
-      .logo-wrap {
-        gap: 0;
-        margin-bottom: 0;
-      }
-
-      .logo-wrap .time {
-        margin-top: -16px;
-      }
-
-      .nav {
-        margin-top: 28px;
-      }
-    }
-
     /* === Link Hub Overlay === */
     #hub {
       position: fixed;
@@ -207,6 +166,50 @@
 
     .social-row a:hover {
       opacity: 1;
+    }
+
+    /* Bigger splash logo on phone-sized screens. Placed after the base
+       #hub rules above so these overrides (equal selector specificity)
+       win in the cascade instead of being silently shadowed by them. */
+    @media (max-width: 600px) {
+      section {
+        margin: 0 auto;
+        margin-top: max(30vh, 300px);
+        width: 100%;
+        text-align: center;
+        padding-top: env(safe-area-inset-top);
+      }
+
+      section img {
+        width: 45vw;
+      }
+
+      /* Hub logo: bigger, and sitting right on top of the date/time line.
+         The source PNG carries ~15% transparent padding above its artwork and
+         ~20% below, so the box is deliberately oversized and the surrounding
+         margins are pulled negative to close the *visible* gap. */
+      .logo-box {
+        width: 190px;
+        height: 190px;
+      }
+
+      .logo-box img {
+        margin-top: 76px;
+      }
+
+      .logo-wrap {
+        gap: 0;
+        margin-top: 20px;
+        margin-bottom: 0;
+      }
+
+      .logo-wrap .time {
+        margin-top: -16px;
+      }
+
+      .nav {
+        margin-top: 28px;
+      }
     }
   </style>
 </head>
