@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BETTY BOOP T-SHIRT BLACK | PALACE SKATEBOARDS (local demo)</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: #fff;
+    color: #111;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  header {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #000;
+    color: #fff;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    height: 52px;
+    padding: 0 8px 0 20px;
+    z-index: 100;
+    gap: 24px;
+  }
+  header .logo { font-size: 16px; letter-spacing: 0.5px; }
+  header nav { display: flex; gap: 20px; height: 100%; }
+  header nav a {
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    padding: 0 10px;
+  }
+  header nav a:hover { color: #999; }
+
+  .back-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+    background: #fff;
+    border: none;
+    border-radius: 999px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  }
+  .back-btn:hover { background: #f2f2f2; }
+
+  main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 110px 24px 60px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  @media (min-width: 900px) {
+    main {
+      grid-template-columns: 7fr 4fr;
+      align-items: start;
+    }
+  }
+
+  .gallery {
+    background: #f4f4f4;
+  }
+  .gallery img { width: 100%; display: block; aspect-ratio: 9 / 10; object-fit: cover; }
+
+  .product-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding-top: 4px;
+  }
+  @media (min-width: 900px) { .product-panel { position: sticky; top: 100px; } }
+
+  h1 { font-size: 15px; margin: 0; }
+  .price { font-size: 15px; margin: 8px 0 0; }
+
+  .description ul { margin: 0; padding-left: 18px; font-size: 14px; line-height: 1.6; }
+
+  .disclosures { display: flex; flex-direction: column; gap: 6px; }
+  .disclosures summary {
+    cursor: pointer;
+    font-size: 14px;
+    color: #666;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .disclosures summary::-webkit-details-marker { display: none; }
+  .disclosures summary:hover { color: #111; }
+  .disclosures summary::after { content: "\2304"; }
+  .disclosures[open] summary::after { content: "\2303"; }
+  .disclosures p { font-size: 13px; color: #444; margin: 8px 0 0; text-transform: none; font-weight: 400; }
+
+  .swatches { display: flex; flex-wrap: wrap; gap: 10px; }
+  .swatches a {
+    width: 52px;
+    height: 52px;
+    background: #f4f4f4;
+    overflow: hidden;
+    position: relative;
+  }
+  .swatches a img { width: 100%; height: 100%; object-fit: cover; }
+  .swatches a.active { outline: 2px solid #111; outline-offset: 2px; }
+
+  .add-to-cart {
+    width: 100%;
+    padding: 16px;
+    background: #eee;
+    color: #999;
+    border: none;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    cursor: not-allowed;
+  }
+
+  footer {
+    text-align: center;
+    font-size: 11px;
+    color: #999;
+    padding: 30px 24px;
+    text-transform: none;
+    font-weight: 400;
+  }
+</style>
+</head>
+<body>
+
+<button class="back-btn" onclick="history.back()" aria-label="Back">&#8592;</button>
+
+<header>
+  <span class="logo">PALACE</span>
+  <nav>
+    <a href="#">Web Shop</a>
+    <a href="#">Shops</a>
+    <a href="#">Advice</a>
+    <a href="#">Cart</a>
+  </nav>
+</header>
+
+<main>
+  <div class="gallery">
+    <img
+      src="https://cdn.shopify.com/s/files/1/0923/4190/files/1785414750-betty-boop-t-shirt-black_2ebd601c-1487-41f5-9929-f40c330748ec.png?v=1787831761&width=1400&height=1556&crop=center"
+      alt="BETTY BOOP T-SHIRT BLACK"
+    />
+  </div>
+
+  <div class="product-panel">
+    <div>
+      <h1>Betty Boop T-Shirt Black</h1>
+      <p class="price">Sold Out</p>
+    </div>
+
+    <div class="description">
+      <ul>
+        <li>Boop</li>
+        <li>Mit Das Betty</li>
+        <li>Your Mum's Kinda Sweaty</li>
+      </ul>
+    </div>
+
+    <div class="disclosures">
+      <details>
+        <summary>Technical Details</summary>
+        <p>100% cotton. Screen print graphic. Regular fit.</p>
+      </details>
+      <details>
+        <summary>Size Chart</summary>
+        <p>Runs true to size. See size guide for full measurements.</p>
+      </details>
+    </div>
+
+    <div class="swatches" aria-label="Colorways">
+      <a class="active" title="Black" href="#">
+        <img src="https://cdn.shopify.com/s/files/1/0923/4190/files/1785414750-betty-boop-t-shirt-black_2ebd601c-1487-41f5-9929-f40c330748ec.png?v=1787831761&width=180&height=180&crop=center" alt="Black" />
+      </a>
+      <a title="White" href="#">
+        <img src="https://cdn.shopify.com/s/files/1/0923/4190/files/1787909495-betty-boop-t-shirt-white_90f9b701-5b04-4a07-a5e9-469c8b01cd6e.png?v=1787909683&width=180&height=180&crop=center" alt="White" />
+      </a>
+      <a title="Chill Pink" href="#">
+        <img src="https://cdn.shopify.com/s/files/1/0923/4190/files/1785414745-betty-boop-t-shirt-chill-pink_6543e7d8-ccb9-4940-a77f-8b601b508243.png?v=1787831794&width=180&height=180&crop=center" alt="Chill Pink" />
+      </a>
+      <a title="Grey Marl" href="#">
+        <img src="https://cdn.shopify.com/s/files/1/0923/4190/files/1785414723-betty-boop-t-shirt-grey-marl_96337531-c88e-4d01-baf0-a470cf15748c.png?v=1787831759&width=180&height=180&crop=center" alt="Grey Marl" />
+      </a>
+    </div>
+
+    <button class="add-to-cart" disabled>Sold Out</button>
+  </div>
+</main>
+
+<footer>
+  Unofficial local recreation for reference/demo purposes only.<br />
+  Product, imagery &amp; copy © Palace Skateboards Limited. Not affiliated with or endorsed by Palace.
+</footer>
+
+</body>
+</html>
