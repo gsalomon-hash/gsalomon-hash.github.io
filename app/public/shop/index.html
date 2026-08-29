@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>BETTY BOOP T-SHIRT BLACK | PALACE SKATEBOARDS (local demo)</title>
+<title>DAY$ WORLDWIDE TEE BLACK | DAY$ SHOP</title>
 <style>
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
@@ -147,7 +147,7 @@
 <button class="back-btn" onclick="history.back()" aria-label="Back">&#8592;</button>
 
 <header>
-  <span class="logo">PALACE</span>
+  <span class="logo">DAY$</span>
   <nav>
     <a href="#">Web Shop</a>
     <a href="#">Shops</a>
@@ -158,23 +158,20 @@
 
 <main>
   <div class="gallery">
-    <img
-      src="https://cdn.shopify.com/s/files/1/0923/4190/files/1785414750-betty-boop-t-shirt-black_2ebd601c-1487-41f5-9929-f40c330748ec.png?v=1787831761&width=1400&height=1556&crop=center"
-      alt="BETTY BOOP T-SHIRT BLACK"
-    />
+    <img id="main-image" src="day-back.png" alt="DAY$ Worldwide Tee Black, back print" />
   </div>
 
   <div class="product-panel">
     <div>
-      <h1>Betty Boop T-Shirt Black</h1>
-      <p class="price">Sold Out</p>
+      <h1>Worldwide Tee Black</h1>
+      <p class="price">Coming Soon</p>
     </div>
 
     <div class="description">
       <ul>
-        <li>Boop</li>
-        <li>Mit Das Betty</li>
-        <li>Your Mum's Kinda Sweaty</li>
+        <li>Every day gon b different</li>
+        <li>Worldwide DAY$ back graphic</li>
+        <li>Front chest hit</li>
       </ul>
     </div>
 
@@ -189,29 +186,35 @@
       </details>
     </div>
 
-    <div class="swatches" aria-label="Colorways">
-      <a class="active" title="Black" href="#">
-        <img src="https://cdn.shopify.com/s/files/1/0923/4190/files/1785414750-betty-boop-t-shirt-black_2ebd601c-1487-41f5-9929-f40c330748ec.png?v=1787831761&width=180&height=180&crop=center" alt="Black" />
+    <div class="swatches" aria-label="Views">
+      <a class="view-btn" title="Front" href="#" data-image="day-front.png">
+        <img src="day-front.png" alt="Front" />
       </a>
-      <a title="White" href="#">
-        <img src="https://cdn.shopify.com/s/files/1/0923/4190/files/1787909495-betty-boop-t-shirt-white_90f9b701-5b04-4a07-a5e9-469c8b01cd6e.png?v=1787909683&width=180&height=180&crop=center" alt="White" />
-      </a>
-      <a title="Chill Pink" href="#">
-        <img src="https://cdn.shopify.com/s/files/1/0923/4190/files/1785414745-betty-boop-t-shirt-chill-pink_6543e7d8-ccb9-4940-a77f-8b601b508243.png?v=1787831794&width=180&height=180&crop=center" alt="Chill Pink" />
-      </a>
-      <a title="Grey Marl" href="#">
-        <img src="https://cdn.shopify.com/s/files/1/0923/4190/files/1785414723-betty-boop-t-shirt-grey-marl_96337531-c88e-4d01-baf0-a470cf15748c.png?v=1787831759&width=180&height=180&crop=center" alt="Grey Marl" />
+      <a class="view-btn active" title="Back" href="#" data-image="day-back.png">
+        <img src="day-back.png" alt="Back" />
       </a>
     </div>
 
-    <button class="add-to-cart" disabled>Sold Out</button>
+    <button class="add-to-cart" disabled>Coming Soon</button>
   </div>
 </main>
 
 <footer>
-  Unofficial local recreation for reference/demo purposes only.<br />
-  Product, imagery &amp; copy © Palace Skateboards Limited. Not affiliated with or endorsed by Palace.
+  DAY$ Worldwide. Mockup for reference purposes only.
 </footer>
+
+<script>
+  const mainImage = document.getElementById("main-image");
+  document.querySelectorAll(".view-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      document.querySelectorAll(".view-btn").forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      mainImage.src = btn.dataset.image;
+      mainImage.alt = btn.title;
+    });
+  });
+</script>
 
 </body>
 </html>
