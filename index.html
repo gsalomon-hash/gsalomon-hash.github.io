@@ -75,6 +75,32 @@
       section img {
         width: 45vw;
       }
+
+      /* Hub logo: bigger, and sitting right on top of the date/time line.
+         The source PNG carries ~15% transparent padding above its artwork and
+         ~20% below, so the box is deliberately oversized and the surrounding
+         margins are pulled negative to close the *visible* gap. */
+      .logo-box {
+        width: 190px;
+        height: 190px;
+      }
+
+      .logo-box img {
+        margin-top: 0;
+      }
+
+      .logo-wrap {
+        gap: 0;
+        margin-bottom: 0;
+      }
+
+      .logo-wrap .time {
+        margin-top: -16px;
+      }
+
+      .nav {
+        margin-top: 28px;
+      }
     }
 
     /* === Link Hub Overlay === */
