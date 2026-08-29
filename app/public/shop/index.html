@@ -101,12 +101,12 @@
 </header>
 
 <div class="categories">
-  <a class="active" href="index.html">All</a>
-  <a href="index.html">Tees</a>
+  <a class="cat-btn active" href="#" data-category="all">All</a>
+  <a class="cat-btn" href="#" data-category="tees">Tees</a>
 </div>
 
 <div class="grid">
-  <a class="tile" href="product.html">
+  <a class="tile" href="product.html" data-category="tees">
     <div class="thumb">
       <img src="day-front.png" alt="Different Day$ Tee - Black" />
     </div>
@@ -118,6 +118,20 @@
 <footer>
   Day$ Worldwide 2026. Bay Area to the World
 </footer>
+
+<script>
+  document.querySelectorAll(".cat-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      document.querySelectorAll(".cat-btn").forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      const category = btn.dataset.category;
+      document.querySelectorAll(".tile").forEach((tile) => {
+        tile.style.display = category === "all" || tile.dataset.category === category ? "" : "none";
+      });
+    });
+  });
+</script>
 
 </body>
 </html>
