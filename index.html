@@ -124,6 +124,10 @@
     }
 
     .time {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
       font-size: 12px;
     }
 
@@ -254,7 +258,11 @@
                until #hub.visible is added. -->
           <img id="image2" data-novfx class="hidden-until-hub" src="https://i.imgur.com/i5UqABD.png" alt="Logo"/>
         </div>
-        <div id="nyc-time" class="time">SF</div>
+        <div id="nyc-time" class="time">
+          <div id="nyc-date"></div>
+          <div id="nyc-clock"></div>
+          <div id="nyc-location">San Francisco, CA</div>
+        </div>
       </header>
 
       <main>
@@ -462,12 +470,75 @@ void main() {
     });
   </script>
 
-  <!-- Fade logic + NYC time -->
+  <!-- Fade logic + rotating city time/weather -->
   <script>
-    // NYC time updater
-    function updateNYCTime() {
-      const el = document.getElementById("nyc-time");
-      if (!el) return;
+    // Cities the header rotates through, each with an IANA timezone and
+    // coordinates (coordinates are batched into a single Open-Meteo request).
+    const CITIES = [
+      { name: "Amsterdam, Netherlands",       tz: "Europe/Amsterdam",    lat: 52.3676, lon: 4.9041 },
+      { name: "Paris, France",                tz: "Europe/Paris",       lat: 48.8566, lon: 2.3522 },
+      { name: "London, United Kingdom",       tz: "Europe/London",      lat: 51.5074, lon: -0.1278 },
+      { name: "Dublin, Ireland",              tz: "Europe/Dublin",      lat: 53.3498, lon: -6.2603 },
+      { name: "Manchester, United Kingdom",   tz: "Europe/London",      lat: 53.4808, lon: -2.2426 },
+      { name: "Birmingham, United Kingdom",   tz: "Europe/London",      lat: 52.4862, lon: -1.8904 },
+      { name: "Cologne, Germany",             tz: "Europe/Berlin",      lat: 50.9375, lon: 6.9603 },
+      { name: "Berlin, Germany",              tz: "Europe/Berlin",      lat: 52.5200, lon: 13.4050 },
+      { name: "Houston, TX",                  tz: "America/Chicago",    lat: 29.7604, lon: -95.3698 },
+      { name: "Atlanta, GA",                  tz: "America/New_York",   lat: 33.7490, lon: -84.3880 },
+      { name: "Toronto, Ontario, Canada",     tz: "America/Toronto",    lat: 43.6532, lon: -79.3832 },
+      { name: "Calgary, Alberta, Canada",     tz: "America/Edmonton",   lat: 51.0447, lon: -114.0719 },
+      { name: "Orlando, FL",                  tz: "America/New_York",   lat: 28.5384, lon: -81.3789 },
+      { name: "Denver, CO",                   tz: "America/Denver",     lat: 39.7392, lon: -104.9903 },
+      { name: "Los Angeles, CA",              tz: "America/Los_Angeles",lat: 34.0522, lon: -118.2437 },
+      { name: "Phoenix, AZ",                  tz: "America/Phoenix",    lat: 33.4484, lon: -112.0740 },
+      { name: "Seattle, WA",                  tz: "America/Los_Angeles",lat: 47.6062, lon: -122.3321 },
+      { name: "Portland, OR",                 tz: "America/Los_Angeles",lat: 45.5152, lon: -122.6784 },
+      { name: "Miami, FL",                    tz: "America/New_York",   lat: 25.7617, lon: -80.1918 },
+      { name: "New York, NY",                 tz: "America/New_York",   lat: 40.7128, lon: -74.0060 },
+      { name: "Dallas, TX",                   tz: "America/Chicago",    lat: 32.7767, lon: -96.7970 },
+      { name: "Austin, TX",                   tz: "America/Chicago",    lat: 30.2672, lon: -97.7431 },
+      { name: "San Diego, CA",                tz: "America/Los_Angeles",lat: 32.7157, lon: -117.1611 },
+      { name: "Las Vegas, NV",                tz: "America/Los_Angeles",lat: 36.1699, lon: -115.1398 }
+    ];
+
+    // Fisher-Yates shuffle so the rotation order is randomized each page load.
+    const cityOrder = CITIES.map((_, i) => i);
+    for (let i = cityOrder.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [cityOrder[i], cityOrder[j]] = [cityOrder[j], cityOrder[i]];
+    }
+    let rotationStep = 0;
+    const cityTemps = new Array(CITIES.length).fill(null);
+
+    // One batched request covers every city's current temperature.
+    async function fetchCityTemps() {
+      const lats = CITIES.map(c => c.lat).join(",");
+      const lons = CITIES.map(c => c.lon).join(",");
+      try {
+        const res = await fetch(
+          `https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}&current=temperature_2m&temperature_unit=fahrenheit`
+        );
+        const data = await res.json();
+        const list = Array.isArray(data) ? data : [data];
+        list.forEach((entry, i) => {
+          const tempF = Math.round(entry.current.temperature_2m);
+          const tempC = Math.round((tempF - 32) * 5 / 9);
+          cityTemps[i] = { tempF, tempC };
+        });
+      } catch (e) {
+        // leave cityTemps as-is; updateDisplay() falls back to no temp shown
+      }
+      updateDisplay();
+    }
+
+    function updateDisplay() {
+      const dateEl = document.getElementById("nyc-date");
+      const clockEl = document.getElementById("nyc-clock");
+      const locationEl = document.getElementById("nyc-location");
+      if (!dateEl || !clockEl || !locationEl) return;
+
+      const cityIndex = cityOrder[rotationStep % cityOrder.length];
+      const city = CITIES[cityIndex];
 
       const now = new Date();
       const options = {
@@ -477,15 +548,23 @@ void main() {
         hour: "2-digit",
         minute: "2-digit",
         hour12: true,
-        timeZone: "America/Los_Angeles"
+        timeZone: city.tz
       };
 
       const parts = new Intl.DateTimeFormat("en-US", options).formatToParts(now);
       const lookup = Object.fromEntries(parts.map(p => [p.type, p.value]));
 
-      const dateStr = `${lookup.month}/${lookup.day}/${lookup.year}`;
-      const timeStr = `${lookup.hour}:${lookup.minute}${lookup.dayPeriod.toLowerCase()}`;
-      el.textContent = `${dateStr} ${timeStr} SF`;
+      dateEl.textContent = `${lookup.month}/${lookup.day}/${lookup.year}`;
+      clockEl.textContent = `${lookup.hour}:${lookup.minute}${lookup.dayPeriod.toLowerCase()}`;
+
+      const temp = cityTemps[cityIndex];
+      const tempStr = temp ? ` ${temp.tempF}°F / ${temp.tempC}°C` : "";
+      locationEl.textContent = `${city.name}${tempStr}`;
+    }
+
+    function rotateCity() {
+      rotationStep++;
+      updateDisplay();
     }
 
     window.addEventListener("load", () => {
@@ -493,9 +572,12 @@ void main() {
       const hub = document.getElementById("hub");
       const image2 = document.getElementById("image2");
 
-      // Start NYC time
-      updateNYCTime();
-      setInterval(updateNYCTime, 60000);
+      // Start the rotating city clock + weather
+      updateDisplay();
+      setInterval(updateDisplay, 1000);
+      setInterval(rotateCity, 5000);
+      fetchCityTemps();
+      setInterval(fetchCityTemps, 15 * 60000);
 
       // After 2s, fade out splash, then fade in hub
       setTimeout(() => {
