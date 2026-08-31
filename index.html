@@ -131,6 +131,10 @@
       font-size: 12px;
     }
 
+    .time > div {
+      white-space: nowrap;
+    }
+
     .nav {
       margin-bottom: 32px;
     }
@@ -498,15 +502,50 @@ void main() {
       { name: "Dallas, TX",                   tz: "America/Chicago",    lat: 32.7767, lon: -96.7970 },
       { name: "Austin, TX",                   tz: "America/Chicago",    lat: 30.2672, lon: -97.7431 },
       { name: "San Diego, CA",                tz: "America/Los_Angeles",lat: 32.7157, lon: -117.1611 },
-      { name: "Las Vegas, NV",                tz: "America/Los_Angeles",lat: 36.1699, lon: -115.1398 }
+      { name: "Las Vegas, NV",                tz: "America/Los_Angeles",lat: 36.1699, lon: -115.1398 },
+      { name: "Chicago, IL",                  tz: "America/Chicago",    lat: 41.8781, lon: -87.6298 },
+      { name: "Detroit, MI",                  tz: "America/Detroit",    lat: 42.3314, lon: -83.0458 },
+      { name: "San Francisco, CA",            tz: "America/Los_Angeles",lat: 37.7749, lon: -122.4194 },
+      { name: "New Orleans, LA",              tz: "America/Chicago",    lat: 29.9511, lon: -90.0715 },
+      { name: "Jacksonville, FL",             tz: "America/New_York",   lat: 30.3322, lon: -81.6557 },
+      { name: "Milwaukee, WI",                tz: "America/Chicago",    lat: 43.0389, lon: -87.9065 },
+      { name: "Louisville, KY",               tz: "America/New_York",   lat: 38.2527, lon: -85.7585 },
+      { name: "Norfolk, VA",                  tz: "America/New_York",   lat: 36.8508, lon: -76.2859 },
+      { name: "Boston, MA",                   tz: "America/New_York",   lat: 42.3601, lon: -71.0589 },
+      { name: "Honolulu, HI",                 tz: "Pacific/Honolulu",   lat: 21.3069, lon: -157.8583 }
     ];
 
-    // Fisher-Yates shuffle so the rotation order is randomized each page load.
-    const cityOrder = CITIES.map((_, i) => i);
+    // Maps an Open-Meteo WMO weather code, wind speed, and day/night + sunrise/sunset
+    // state to a condition icon. Sunrise/sunset windows and darkness take priority
+    // over the plain weather code so the icon reflects what the sky actually looks like.
+    const TWILIGHT_WINDOW_MS = 30 * 60 * 1000;
+
+    function weatherIcon(code, windMph, isDay, sunriseMs, sunsetMs, nowMs) {
+      if (sunriseMs != null && Math.abs(nowMs - sunriseMs) <= TWILIGHT_WINDOW_MS) return "🌅";
+      if (sunsetMs != null && Math.abs(nowMs - sunsetMs) <= TWILIGHT_WINDOW_MS) return "🌇";
+      if (windMph >= 25) return "💨";
+      if (!isDay && (code === 0 || code === 1)) return "🌙";
+      if (code === 0) return "☀️";
+      if (code === 1) return "🌤️";
+      if (code === 2) return isDay ? "⛅" : "☁️";
+      if (code === 3) return "☁️";
+      if (code === 45 || code === 48) return "🌫️";
+      if ([51, 53, 55, 56, 57, 80, 81, 82].includes(code)) return "🌦️";
+      if ([61, 63, 65, 66, 67].includes(code)) return "🌧️";
+      if ([71, 73, 75, 77, 85, 86].includes(code)) return "❄️";
+      if ([95, 96, 99].includes(code)) return "⛈️";
+      return "";
+    }
+
+    // Fisher-Yates shuffle so the rotation order is randomized each page load,
+    // but San Francisco always leads the rotation.
+    const sfIndex = CITIES.findIndex(c => c.name === "San Francisco, CA");
+    const cityOrder = CITIES.map((_, i) => i).filter(i => i !== sfIndex);
     for (let i = cityOrder.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [cityOrder[i], cityOrder[j]] = [cityOrder[j], cityOrder[i]];
     }
+    cityOrder.unshift(sfIndex);
     let rotationStep = 0;
     const cityTemps = new Array(CITIES.length).fill(null);
 
@@ -516,14 +555,27 @@ void main() {
       const lons = CITIES.map(c => c.lon).join(",");
       try {
         const res = await fetch(
-          `https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}&current=temperature_2m&temperature_unit=fahrenheit`
+          `https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}&current=temperature_2m,weather_code,wind_speed_10m,is_day&daily=sunrise,sunset&forecast_days=1&timezone=GMT&temperature_unit=fahrenheit&wind_speed_unit=mph`
         );
         const data = await res.json();
         const list = Array.isArray(data) ? data : [data];
+        const nowMs = Date.now();
         list.forEach((entry, i) => {
           const tempF = Math.round(entry.current.temperature_2m);
           const tempC = Math.round((tempF - 32) * 5 / 9);
-          cityTemps[i] = { tempF, tempC };
+          // daily.sunrise/sunset are naive "GMT" timestamps (no trailing Z), so
+          // append it to parse them as the UTC instants they actually are.
+          const sunriseMs = entry.daily?.sunrise?.[0] ? Date.parse(entry.daily.sunrise[0] + "Z") : null;
+          const sunsetMs = entry.daily?.sunset?.[0] ? Date.parse(entry.daily.sunset[0] + "Z") : null;
+          const icon = weatherIcon(
+            entry.current.weather_code,
+            entry.current.wind_speed_10m,
+            entry.current.is_day === 1,
+            sunriseMs,
+            sunsetMs,
+            nowMs
+          );
+          cityTemps[i] = { tempF, tempC, icon };
         });
       } catch (e) {
         // leave cityTemps as-is; updateDisplay() falls back to no temp shown
@@ -548,18 +600,33 @@ void main() {
         hour: "2-digit",
         minute: "2-digit",
         hour12: true,
-        timeZone: city.tz
+        timeZone: city.tz,
+        timeZoneName: "short"
       };
 
       const parts = new Intl.DateTimeFormat("en-US", options).formatToParts(now);
       const lookup = Object.fromEntries(parts.map(p => [p.type, p.value]));
 
       dateEl.textContent = `${lookup.month}/${lookup.day}/${lookup.year}`;
-      clockEl.textContent = `${lookup.hour}:${lookup.minute}${lookup.dayPeriod.toLowerCase()}`;
+      clockEl.textContent = `${lookup.hour}:${lookup.minute}${lookup.dayPeriod.toLowerCase()} ${lookup.timeZoneName}`;
 
       const temp = cityTemps[cityIndex];
-      const tempStr = temp ? ` ${temp.tempF}°F / ${temp.tempC}°C` : "";
+      const tempStr = temp ? ` ${temp.icon} ${temp.tempF}°F / ${temp.tempC}°C` : "";
       locationEl.textContent = `${city.name}${tempStr}`;
+
+      fitLine(clockEl);
+      fitLine(locationEl);
+    }
+
+    // Shrinks a line (via scale, not font-size, to avoid reflow) so long
+    // city names + temperature strings never wrap onto a second line.
+    function fitLine(el) {
+      el.style.transform = "scale(1)";
+      const maxWidth = window.innerWidth * 0.92;
+      const naturalWidth = el.scrollWidth;
+      if (naturalWidth > maxWidth) {
+        el.style.transform = `scale(${maxWidth / naturalWidth})`;
+      }
     }
 
     function rotateCity() {
@@ -578,6 +645,7 @@ void main() {
       setInterval(rotateCity, 5000);
       fetchCityTemps();
       setInterval(fetchCityTemps, 15 * 60000);
+      window.addEventListener("resize", updateDisplay);
 
       // After 2s, fade out splash, then fade in hub
       setTimeout(() => {
