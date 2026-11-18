@@ -311,42 +311,43 @@
         padding-top: env(safe-area-inset-top);
       }
 
-      /* The 300px desktop header offset is too tall for phone screens, so
+      /* The 265px desktop header offset is too tall for phone screens, so
          give the header less room to clear and let .hub-scroll fill the rest. */
       #hub {
-        padding-top: 90px;
+        padding-top: 245px;
       }
 
       .page {
-        height: calc(100vh - 90px - 16px);
-        height: calc(100dvh - 90px - 16px);
+        height: calc(100vh - 245px - 16px);
+        height: calc(100dvh - 245px - 16px);
       }
 
       section img {
         width: 45vw;
       }
 
-      /* Hub logo: smaller, with breathing room above the date/time line.
-         The source PNG carries ~15% transparent padding above its artwork and
-         ~20% below, so the box is deliberately oversized and the surrounding
-         margins are pulled negative to close the *visible* gap. */
+      /* Hub logo: bigger than the old "miniature" 70px version, with
+         breathing room above the date/time line. The source PNG carries
+         ~15% transparent padding above its artwork and ~20% below, so the
+         box is deliberately oversized and the surrounding margins are
+         pulled negative to close the *visible* gap. */
       .logo-box {
-        width: 70px;
-        height: 70px;
+        width: 110px;
+        height: 110px;
       }
 
       .logo-box img {
-        margin-top: 14px;
+        margin-top: 22px;
       }
 
       .logo-wrap {
         gap: 0;
-        margin-top: 20px;
-        margin-bottom: 8px;
+        margin-top: 0;
+        margin-bottom: 12px;
       }
 
       .logo-wrap .time {
-        margin-top: 6px;
+        margin-top: -40px;
       }
 
       .nav {
