@@ -591,15 +591,15 @@ void main() {
     // Each show: date (required, "YYYY-MM-DD"), city (required), and
     // optional event (tour/party name), venue, link (tickets), soldOut.
     const TOUR_DATES = [
-      { date: "2026-11-21", venue: "Skylark", city: "San Francisco, CA" },
+      { date: "2026-11-21", venue: "Skylark", city: "San Francisco, CA", link: "https://www.eventbrite.com/e/skylark-saturdays-skylark-11212026-tickets-2004929758880" },
       { date: "2026-11-28", venue: "Origin Nightclub", city: "San Francisco, CA" },
-      { date: "2026-12-06", event: "R&B Block Party Presents: Karri", venue: "O2 Forum Kentish Town", city: "London, United Kingdom" },
+      { date: "2026-12-06", event: "R&B Block Party Presents: Karri", venue: "O2 Forum Kentish Town", city: "London, United Kingdom", link: "https://www.ticketmaster.co.uk/jacquees-mood-2-uk-london-06-12-2026/event/3E006536B2572D74" },
       { date: "2026-12-12", event: "SantaCon", city: "TBD" },
-      { date: "2026-12-18", event: "3 Nights in The Bay w/ Nueve Lio", venue: "Brick and Mortar Music Hall", city: "San Francisco, CA", soldOut: true },
-      { date: "2026-12-18", event: "3 Nights in The Bay w/ Nueve Lio After Party", venue: "Skylark", city: "San Francisco, CA" },
-      { date: "2026-12-19", event: "3 Nights in The Bay w/ Nueve Lio", venue: "Brick and Mortar Music Hall", city: "San Francisco, CA", soldOut: true },
-      { date: "2026-12-19", event: "R&B Party", venue: "Soundtrack", city: "San Francisco, CA" },
-      { date: "2026-12-20", event: "3 Nights in The Bay w/ Nueve Lio", venue: "Brick and Mortar Music Hall", city: "San Francisco, CA", soldOut: true },
+      { date: "2026-12-18", event: "3 Nights in The Bay w/ Nueve Lio", venue: "Brick and Mortar Music Hall", city: "San Francisco, CA", soldOut: true, link: "https://www.brickandmortarmusic.com/tm-event/nueve-lio-night-1/" },
+      { date: "2026-12-18", event: "3 Nights in The Bay w/ Nueve Lio After Party", venue: "Skylark", city: "San Francisco, CA", link: "https://www.poweredbydmp.com/skylark" },
+      { date: "2026-12-19", event: "3 Nights in The Bay w/ Nueve Lio", venue: "Brick and Mortar Music Hall", city: "San Francisco, CA", soldOut: true, link: "https://www.brickandmortarmusic.com/tm-event/nueve-lio-night-2/" },
+      { date: "2026-12-19", event: "R&B Party", venue: "Soundtrack", city: "San Francisco, CA", link: "https://www.poweredbydmp.com/soundtrack" },
+      { date: "2026-12-20", event: "3 Nights in The Bay w/ Nueve Lio", venue: "Brick and Mortar Music Hall", city: "San Francisco, CA", soldOut: true, link: "https://www.brickandmortarmusic.com/tm-event/nueve-lio-night-3/" },
     ];
 
     function formatTourDate(iso) {
