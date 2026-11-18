@@ -68,10 +68,11 @@
       inset: 0;
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.8s ease;
+      padding-top: 265px;
     }
 
     #hub.visible {
@@ -81,20 +82,33 @@
 
     .page {
       text-align: left;
-      width: 260px;
+      width: min(680px, 94vw);
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 265px - 24px);
+      height: calc(100dvh - 265px - 24px);
     }
 
+    /* Header (logo + rotating city time/weather) stays put; only .hub-scroll
+       below it scrolls, so the header never moves as the tour list is browsed. */
     .logo-wrap {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 16px;
-      margin-bottom: 40px;
+      gap: 10px;
+      margin-bottom: 18px;
+      flex: 0 0 auto;
+    }
+
+    .hub-scroll {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
     }
 
     .logo-box {
-      width: 140px;
-      height: 140px;
+      width: 90px;
+      height: 90px;
       border-radius: 4px;
       display: flex;
       align-items: center;
@@ -136,7 +150,7 @@
     }
 
     .nav {
-      margin-bottom: 32px;
+      margin-bottom: 14px;
     }
 
     .coming-soon {
@@ -145,12 +159,92 @@
       margin: 6px 0 12px;
     }
 
-    .nav-link {
-      display: block;
-      font-size: 13px;
+    #tour-dates {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tour-date {
+      display: grid;
+      grid-template-columns: 70px 1fr auto;
+      align-items: center;
+      gap: 14px;
       color: #fff;
       text-decoration: none;
-      margin: 6px 0;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .tour-date:first-child {
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .tour-date:hover .tour-date-primary {
+      text-decoration: underline;
+    }
+
+    .tour-date-day {
+      font-size: 15px;
+      font-weight: bold;
+      color: #fd7315;
+      white-space: nowrap;
+    }
+
+    .tour-date-info {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      min-width: 0;
+    }
+
+    .tour-date-primary {
+      font-size: 15px;
+    }
+
+    .tour-date-secondary {
+      font-size: 12px;
+      opacity: 0.65;
+    }
+
+    .tour-date-status {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .sold-out {
+      display: inline-block;
+      background: #e11d2e;
+      color: #fff;
+      font-size: 11px;
+      font-weight: bold;
+      letter-spacing: 0.05em;
+      padding: 3px 7px 4px;
+      border-radius: 2px;
+      white-space: nowrap;
+    }
+
+    .tour-date-tickets {
+      font-size: 11px;
+      font-weight: bold;
+      letter-spacing: 0.05em;
+      color: #fd7315;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 480px) {
+      .tour-date {
+        grid-template-columns: 60px 1fr auto;
+        gap: 10px;
+      }
+    }
+
+    .nav-link {
+      display: block;
+      font-size: 12px;
+      color: #fff;
+      text-decoration: none;
+      margin: 4px 0;
     }
 
     .nav-link:hover {
@@ -186,7 +280,7 @@
       display: flex;
       justify-content: center;
       gap: 16px;
-      margin-top: 16px;
+      margin-top: 10px;
     }
 
     .icon-row a {
@@ -217,6 +311,17 @@
         padding-top: env(safe-area-inset-top);
       }
 
+      /* The 300px desktop header offset is too tall for phone screens, so
+         give the header less room to clear and let .hub-scroll fill the rest. */
+      #hub {
+        padding-top: 90px;
+      }
+
+      .page {
+        height: calc(100vh - 90px - 16px);
+        height: calc(100dvh - 90px - 16px);
+      }
+
       section img {
         width: 45vw;
       }
@@ -226,26 +331,26 @@
          ~20% below, so the box is deliberately oversized and the surrounding
          margins are pulled negative to close the *visible* gap. */
       .logo-box {
-        width: 130px;
-        height: 130px;
+        width: 70px;
+        height: 70px;
       }
 
       .logo-box img {
-        margin-top: 25px;
+        margin-top: 14px;
       }
 
       .logo-wrap {
         gap: 0;
-        margin-top: 52px;
-        margin-bottom: 0;
+        margin-top: 20px;
+        margin-bottom: 8px;
       }
 
       .logo-wrap .time {
-        margin-top: 8px;
+        margin-top: 6px;
       }
 
       .nav {
-        margin-top: 28px;
+        margin-top: 10px;
       }
     }
   </style>
@@ -275,9 +380,9 @@
         </div>
       </header>
 
-      <main>
+      <main class="hub-scroll">
         <nav class="nav">
-          <div class="coming-soon">COMING SOON</div>
+          <div id="tour-dates"></div>
           <a class="nav-link" href="mailto:daysworldwide@gmail.com">bookings / contact</a>
         </nav>
 
@@ -476,6 +581,75 @@ void main() {
         });
       }
     });
+  </script>
+
+  <!-- Tour dates: edit this list to add/remove shows. Dates must be
+       "YYYY-MM-DD". Past dates drop off automatically; if the list ends up
+       empty, the page falls back to showing "COMING SOON". -->
+  <script>
+    // Each show: date (required, "YYYY-MM-DD"), city (required), and
+    // optional event (tour/party name), venue, link (tickets), soldOut.
+    const TOUR_DATES = [
+      { date: "2026-11-21", venue: "Skylark", city: "San Francisco, CA" },
+      { date: "2026-11-28", venue: "Origin Nightclub", city: "San Francisco, CA" },
+      { date: "2026-12-06", event: "R&B Block Party Presents: Karri", venue: "O2 Forum Kentish Town", city: "London, United Kingdom" },
+      { date: "2026-12-12", event: "SantaCon", city: "TBD" },
+      { date: "2026-12-18", event: "3 Nights in The Bay w/ Nueve Lio", venue: "Brick and Mortar Music Hall", city: "San Francisco, CA", soldOut: true },
+      { date: "2026-12-18", event: "3 Nights in The Bay w/ Nueve Lio After Party", venue: "Skylark", city: "San Francisco, CA" },
+      { date: "2026-12-19", event: "3 Nights in The Bay w/ Nueve Lio", venue: "Brick and Mortar Music Hall", city: "San Francisco, CA", soldOut: true },
+      { date: "2026-12-19", event: "R&B Party", venue: "Soundtrack", city: "San Francisco, CA" },
+      { date: "2026-12-20", event: "3 Nights in The Bay w/ Nueve Lio", venue: "Brick and Mortar Music Hall", city: "San Francisco, CA", soldOut: true },
+    ];
+
+    function formatTourDate(iso) {
+      const [y, m, d] = iso.split("-").map(Number);
+      return new Date(y, m - 1, d)
+        .toLocaleDateString("en-US", { month: "short", day: "2-digit" })
+        .toUpperCase();
+    }
+
+    function renderTourDates() {
+      const container = document.getElementById("tour-dates");
+      if (!container) return;
+
+      const todayStr = new Date().toLocaleDateString("en-CA"); // local YYYY-MM-DD
+      const upcoming = TOUR_DATES
+        .filter(show => show.date >= todayStr)
+        .sort((a, b) => a.date.localeCompare(b.date));
+
+      if (upcoming.length === 0) {
+        container.innerHTML = '<div class="coming-soon">COMING SOON</div>';
+        return;
+      }
+
+      container.innerHTML = upcoming.map(show => {
+        const primary = show.event || show.venue || show.city;
+        const secondary = show.event
+          ? [show.venue, show.city].filter(Boolean).join(" · ")
+          : show.city;
+
+        const status = show.soldOut
+          ? '<span class="sold-out">SOLD OUT</span>'
+          : show.link
+            ? '<span class="tour-date-tickets">TICKETS →</span>'
+            : "";
+
+        const row = `
+          <span class="tour-date-day">${formatTourDate(show.date)}</span>
+          <span class="tour-date-info">
+            <span class="tour-date-primary">${primary}</span>
+            ${secondary ? `<span class="tour-date-secondary">${secondary}</span>` : ""}
+          </span>
+          <span class="tour-date-status">${status}</span>
+        `;
+
+        return show.link
+          ? `<a class="tour-date" href="${show.link}" target="_blank" rel="noopener noreferrer">${row}</a>`
+          : `<div class="tour-date">${row}</div>`;
+      }).join("");
+    }
+
+    window.addEventListener("load", renderTourDates);
   </script>
 
   <!-- Fade logic + rotating city time/weather -->
